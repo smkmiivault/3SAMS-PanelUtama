@@ -6,331 +6,726 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3 SIDDIQ ELITE | AMS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --apple-gold: #c5a059;
-            --apple-gold-light: #e5d1a4;
-            --glass-white: rgba(255, 255, 255, 0.2);
-            --glass-border: rgba(255, 255, 255, 0.5);
-            --text-dark: #2c2c2c;
+            --space-black: #030305;
+            --deep-purple: #130f26;
+            --neon-purple: #b026ff;
+            --neon-blue: #00f3ff;
+            --elite-gold: #ffd700;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-glow: 0 0 15px rgba(176, 38, 255, 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            cursor: none;
         }
 
         body {
             margin: 0;
             padding: 0;
             height: 100vh;
-            font-family: 'Inter', sans-serif;
+            background-color: var(--space-black);
+            font-family: 'Rajdhani', sans-serif;
+            color: white;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            /* Animated Moving Background - Mesh Gradient Style */
-            background: linear-gradient(120deg, #ffffff, #f7f3e9, #ffffff, #e8e1d2);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
         }
 
-        @keyframes gradientBG {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
+        /* --- KURSOR KUSTOM --- */
+        #cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--neon-blue);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, background 0.2s;
+            mix-blend-mode: difference;
         }
 
-        /* --- HEADER LIQUID --- */
+        #cursor.hovered {
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 243, 255, 0.2);
+            border-color: var(--elite-gold);
+        }
+
+        #cursor-dot {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+        }
+
+        /* --- KANVAS WARP SPEED --- */
+        #warp-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* --- LAPISAN INTRO --- */
+        #intro-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle, transparent 0%, #000 100%);
+            transition: opacity 1s ease-in-out;
+        }
+
+        .intro-text-container {
+            text-align: center;
+            perspective: 500px;
+        }
+
+        .intro-msg {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            letter-spacing: 10px;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.8);
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateZ(-100px);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-shadow: 0 0 30px var(--neon-purple);
+        }
+
+        .intro-msg.active {
+            opacity: 1;
+            transform: translateZ(0);
+            color: white;
+        }
+
+        .skip-btn {
+            position: absolute;
+            bottom: 50px;
+            padding: 15px 40px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: 0.3s;
+            clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+        }
+
+        .skip-btn:hover {
+            background: var(--neon-blue);
+            color: #000;
+            box-shadow: 0 0 30px var(--neon-blue);
+        }
+
+        /* --- HEADER --- */
         header {
             position: fixed;
             top: 0;
             width: 100%;
-            height: 70px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border-bottom: 1px solid var(--glass-border);
+            height: 90px;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 900;
+            z-index: 1000;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent);
+            pointer-events: none;
         }
 
         .header-content {
+            pointer-events: auto;
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 40px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         }
 
         .header-logo {
-            height: 45px;
+            height: 55px;
             width: auto;
-            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.05));
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .header-logo:hover {
+            transform: scale(1.2) rotate(5deg);
         }
 
         .header-title {
-            background: linear-gradient(to right, #b38728, #fbf5b7, #b38728);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            background: linear-gradient(to right, #fff, var(--neon-blue), #fff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            font-weight: 600;
-            font-size: 1.2rem;
-            letter-spacing: 1.5px;
+            text-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
         }
 
-        /* --- HAMBURGER --- */
-        .hamburger-container {
+        /* --- TRIGGER MENU --- */
+        .menu-trigger {
             position: fixed;
-            top: 22px;
-            left: 25px;
-            z-index: 1100;
+            top: 30px;
+            left: 30px;
+            width: 60px;
+            height: 60px;
+            z-index: 2000;
             cursor: pointer;
-            width: 35px;
-            height: 24px;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .magnetic-area {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.02);
+            transition: all 0.3s ease;
+        }
+
+        .menu-trigger:hover .magnetic-area {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 20px var(--neon-purple);
+            transform: scale(1.1);
+        }
+
+        .bars-wrap {
+            position: relative;
+            width: 24px;
+            height: 18px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
-        .bar {
-            height: 3px;
+        .bar-line {
             width: 100%;
-            background: var(--apple-gold);
-            border-radius: 4px;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            height: 2px;
+            background: white;
+            transition: 0.4s cubic-bezier(0.86, 0, 0.07, 1);
         }
 
-        .active .bar:nth-child(1) {
-            transform: translateY(10.5px) rotate(45deg);
+        .bar-line:nth-child(2) {
+            width: 70%;
+            margin-left: auto;
         }
 
-        .active .bar:nth-child(2) {
+        .bar-line:nth-child(3) {
+            width: 50%;
+            margin-left: auto;
+        }
+
+        .menu-trigger:hover .bar-line {
+            width: 100%;
+            background: var(--elite-gold);
+        }
+
+        .menu-trigger.active .bar-line:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+            width: 100%;
+        }
+
+        .menu-trigger.active .bar-line:nth-child(2) {
             opacity: 0;
         }
 
-        .active .bar:nth-child(3) {
-            transform: translateY(-10.5px) rotate(-45deg);
+        .menu-trigger.active .bar-line:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+            width: 100%;
         }
 
-        /* --- SIDEBAR LIQUID GLASS --- */
-        .sidebar {
+        /* --- PANEL SISI --- */
+        .sidebar-overlay {
             position: fixed;
-            left: -320px;
             top: 0;
-            width: 300px;
+            left: 0;
+            width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1500;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.5s;
+            backdrop-filter: blur(10px);
+        }
+
+        .sidebar-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .sidebar-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 400px;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(20, 20, 30, 0.95), rgba(5, 5, 10, 0.98));
             border-right: 1px solid var(--glass-border);
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 1000;
+            z-index: 1600;
+            transform: translateX(-105%) skewX(-10deg);
+            transform-origin: top left;
+            transition: 0.6s cubic-bezier(0.77, 0, 0.175, 1);
             display: flex;
             flex-direction: column;
+            padding: 100px 40px;
+            box-shadow: 20px 0 50px rgba(0, 0, 0, 0.8);
         }
 
-        .sidebar.open {
-            left: 0;
+        .sidebar-overlay.open .sidebar-panel {
+            transform: translateX(0) skewX(0);
         }
 
-        .sidebar-header {
-            padding: 110px 30px 20px;
-            font-size: 0.75rem;
-            color: var(--apple-gold);
-            font-weight: 600;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        .nav-menu {
-            flex-grow: 1;
-            padding: 0 15px;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 14px 20px;
-            margin-bottom: 8px;
-            color: var(--text-dark);
-            text-decoration: none;
-            border-radius: 15px;
-            transition: 0.3s;
-            font-weight: 500;
-            border: 1px solid transparent;
-        }
-
-        .nav-item i {
-            margin-right: 15px;
-            color: var(--apple-gold);
-            width: 25px;
-            text-align: center;
-        }
-
-        .nav-item:hover {
-            background: rgba(255, 255, 255, 0.4);
-            border: 1px solid var(--glass-border);
-            transform: translateX(10px);
-        }
-
-        .logout {
-            margin: 20px 15px 40px;
-            color: #cc4444 !important;
-        }
-
-        /* --- HOMESCREEN CONTENT --- */
-        .main-container {
-            margin-top: 70px;
-            height: calc(100vh - 70px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .welcome-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            padding: 60px 40px;
-            border-radius: 40px;
-            text-align: center;
-            max-width: 800px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
-            animation: fadeIn 1.5s ease;
-        }
-
-        /* Shine effect (Liquid Reflection) */
-        .welcome-card::before {
+        .sidebar-panel::after {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transform: rotate(45deg);
-            animation: shine 8s infinite linear;
+            top: 0;
+            right: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, var(--neon-purple), var(--neon-blue), transparent);
+            box-shadow: 0 0 20px var(--neon-purple);
         }
 
-        @keyframes shine {
+        .nav-link {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            margin: 15px 0;
+            padding: 10px 0;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: white;
+            padding-left: 20px;
+        }
+
+        .nav-link::before {
+            content: attr(data-text);
+            position: absolute;
+            top: 10px;
+            left: 0;
+            color: var(--neon-purple);
+            opacity: 0;
+            filter: blur(5px);
+            transition: 0.3s;
+        }
+
+        .nav-link:hover::before {
+            opacity: 0.5;
+            left: 20px;
+        }
+
+        .nav-icon {
+            margin-right: 15px;
+            font-size: 1.2rem;
+            color: var(--neon-blue);
+        }
+
+        /* --- HUD UTAMA --- */
+        .main-stage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            max-width: 1200px;
+            z-index: 500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+        }
+
+        .hud-card {
+            background: rgba(10, 10, 16, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 60px 80px;
+            border-radius: 4px;
+            position: relative;
+            text-align: center;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px),
+                    calc(100% - 20px) 100%, 0 100%, 0 20px);
+            transition: transform 0.1s;
+        }
+
+        .hud-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 4px;
+            padding: 2px;
+            background: linear-gradient(45deg, var(--neon-purple), transparent, var(--neon-blue));
+            -webkit-mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .hud-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: linear-gradient(to bottom, #fff, #a29bfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 30px rgba(162, 155, 254, 0.2);
+            font-weight: 900;
+        }
+
+        .hud-subtitle {
+            font-family: 'Rajdhani', sans-serif;
+            color: var(--neon-blue);
+            font-size: 1.2rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 30px;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid var(--elite-gold);
+            color: var(--elite-gold);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            gap: 10px;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+            transition: 0.3s;
+        }
+
+        .status-pill:hover {
+            background: var(--elite-gold);
+            color: black;
+            box-shadow: 0 0 40px var(--elite-gold);
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--elite-gold);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
             0% {
-                transform: translateX(-150%) rotate(45deg);
+                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(255, 215, 0, 0);
             }
 
             100% {
-                transform: translateX(150%) rotate(45deg);
+                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
             }
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
+        @media (max-width: 768px) {
+            .hud-title {
+                font-size: 2.5rem;
             }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            .header-title {
+                display: none;
             }
-        }
 
-        .welcome-card h1 {
-            color: var(--text-dark);
-            font-size: 2.2rem;
-            margin-bottom: 15px;
-            font-weight: 600;
-            line-height: 1.2;
-        }
+            .sidebar-panel {
+                width: 85%;
+            }
 
-        .welcome-card p {
-            color: var(--apple-gold);
-            font-size: 1.1rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            margin-bottom: 30px;
-            font-weight: 400;
-        }
-
-        .session-badge {
-            display: inline-block;
-            padding: 10px 25px;
-            background: rgba(197, 160, 89, 0.1);
-            border: 1px solid var(--apple-gold);
-            color: var(--apple-gold);
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 0.9rem;
+            .intro-msg {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 
 <body>
 
+    <!-- Kursor Kustom -->
+    <div id="cursor"></div>
+    <div id="cursor-dot"></div>
+
+    <!-- Lapisan Intro -->
+    <div id="intro-layer">
+        <div class="intro-text-container">
+            <div class="intro-msg" id="msg1">MEMULAKAN SISTEM</div>
+            <div class="intro-msg" id="msg2">PACUAN WARP AKTIF</div>
+            <div class="intro-msg" id="msg3">SELAMAT DATANG ELITE</div>
+        </div>
+        <button class="skip-btn" onclick="endIntro()">BATAL PELANCARAN / LANGKAU</button>
+    </div>
+
+    <!-- Kanvas Latar Belakang -->
+    <canvas id="warp-canvas"></canvas>
+
+    <!-- Header -->
     <header>
         <div class="header-content">
-            <img src="https://i.postimg.cc/FsL0XknW/SMKMII-LGO-removebg-preview.png" class="header-logo" alt="Logo 1">
-            <div class="header-title">3 SIDDIQ | SISTEM KEHADIRAN PINTAR</div>
-            <img src="https://i.postimg.cc/xCcWgqmx/photo-6057413719148399989-y-removebg-preview.png" class="header-logo" alt="Logo 2">
+            <img src="https://i.postimg.cc/FsL0XknW/SMKMII-LGO-removebg-preview.png" class="header-logo" alt="Logo SMK">
+            <div class="header-title">3 SIDDIQ ELITE | AMS</div>
+            <img src="https://i.postimg.cc/xCcWgqmx/photo-6057413719148399989-y-removebg-preview.png" class="header-logo" alt="Logo AMS">
         </div>
     </header>
 
-    <div class="hamburger-container" id="hamburger" onclick="toggleMenu()">
-        <div class="bar"></div>
-        <div class="bar"></div>
-        <div class="bar"></div>
+    <!-- Trigger Menu -->
+    <div class="menu-trigger" onclick="toggleSidebar()">
+        <div class="magnetic-area"></div>
+        <div class="bars-wrap">
+            <div class="bar-line"></div>
+            <div class="bar-line"></div>
+            <div class="bar-line"></div>
+        </div>
     </div>
 
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">Menu Navigasi</div>
-        <nav class="nav-menu">
-            <a href="#" class="nav-item" onclick="navigasi('https://smkmiivault.github.io/3SAMS-PanelUtama/')">
-                <i class="fas fa-house"></i> Panel Utama
-            </a>
-            <a href="#" class="nav-item" onclick="navigasi('https://smkmiivault.github.io/3SAMS-UrusPelajar/')">
-                <i class="fas fa-user-tie"></i> Urus Pelajar
-            </a>
-            <a href="#" class="nav-item" onclick="navigasi('https://smkmiivault.github.io/3SAMS-RekodHadir/')">
-                <i class="fas fa-fingerprint"></i> Rekod Hadir
-            </a>
-            <a href="#" class="nav-item" onclick="navigasi('https://smkmiivault.github.io/3SAMS-Analitik/')">
-                <i class="fas fa-chart-pie"></i> Analitik
-            </a>
-        </nav>
-        <a href="#" class="nav-item logout" onclick="logout()">
+    <!-- Panel Sisi -->
+    <div class="sidebar-overlay" id="sidebar-overlay">
+        <div class="sidebar-panel">
+            <h2 style="color: var(--neon-blue); font-family: 'Orbitron'; margin-bottom: 50px; letter-spacing: 2px;">NAVIGASI</h2>
+            <a href="#" class="nav-link" data-text="UTAMA" onclick="navigasi('https://smkmiivault.github.io/3SAMS-PanelUtama/')"><i class="fas fa-satellite-dish nav-icon"></i> PANEL UTAMA</a>
+            <a href="#" class="nav-link" data-text="PELAJAR" onclick="navigasi('https://smkmiivault.github.io/3SAMS-UrusPelajar/')"><i class="fas fa-user-astronaut nav-icon"></i> URUS PELAJAR</a>
+            <a href="#" class="nav-link" data-text="KEHADIRAN" onclick="navigasi('https://smkmiivault.github.io/3SAMS-RekodHadir/')"><i class="fas fa-dna nav-icon"></i> REKOD KEHADIRAN</a>
+            <a href="#" class="nav-link" data-text="ANALITIK" onclick="navigasi('https://smkmiivault.github.io/3SAMS-Analitik/')"><i class="fas fa-chart-simple nav-icon"></i> ANALITIK DATA</a>
 
-            <i class="fas fa-power-off"></i> Log Keluar
-        </a>
+            <a href="#" class="nav-link" style="margin-top: auto; color: #ff4444;" onclick="logout()"><i class="fas fa-power-off nav-icon" style="color:#ff4444;"></i> Log Keluar</a>
+        </div>
     </div>
 
-    <main class="main-container">
-        <div class="welcome-card">
-            <p>Sistem Pengurusan Digital</p>
-            <h1>SELAMAT DATANG KE SISTEM KEHADIRAN PINTAR KELAS 3 SIDDIQ</h1>
-            <div class="session-badge">SESI 2026-2027</div>
+    <!-- Kandungan Utama -->
+    <main class="main-stage">
+        <div class="hud-card" id="hud-card">
+            <p class="hud-subtitle">SISTEM KEHADIRAN PINTAR 2026-2027</p>
+            <h1 class="hud-title">SELAMAT DATANG<br>3 SIDDIQ ELITE</h1>
+            <div class="status-pill">
+                <div class="pulse-dot"></div>
+                SISTEM DALAM TALIAN
+            </div>
         </div>
     </main>
 
     <script>
-        function toggleMenu() {
-            document.getElementById('sidebar').classList.toggle('open');
-            document.getElementById('hamburger').classList.toggle('active');
+        // --- KURSOR KUSTOM ---
+        const cursor = document.getElementById('cursor');
+        const cursorDot = document.getElementById('cursor-dot');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            cursorDot.style.left = e.clientX + 'px';
+            cursorDot.style.top = e.clientY + 'px';
+        });
+
+        const hoverElements = document.querySelectorAll('a, button, .menu-trigger, .status-pill');
+        hoverElements.forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+        // --- ENJIN STARFIELD & WARP SPEED ---
+        const canvas = document.getElementById('warp-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let stars = [];
+        let warpSpeed = 0;
+        let introActive = true;
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Star {
+            constructor() {
+                this.reset(true);
+            }
+
+            reset(initial) {
+                this.x = (Math.random() - 0.5) * width;
+                this.y = (Math.random() - 0.5) * height;
+                this.z = initial ? Math.random() * 2000 : 2000;
+                this.size = Math.random() * 2;
+                this.color = Math.random() > 0.8 ? '#b026ff' : (Math.random() > 0.5 ? '#00f3ff' : '#ffffff');
+            }
+
+            update(speed) {
+                this.z -= speed;
+                if (this.z <= 1) this.reset(false);
+            }
+
+            draw() {
+                let sx = this.x / this.z * 500 + width / 2;
+                let sy = this.y / this.z * 500 + height / 2;
+                let radius = (1 - this.z / 2000) * this.size * (warpSpeed > 0 ? 3 : 1);
+
+                if (!introActive) {
+                    sx += (mouseX - width / 2) * 0.05 * (2000 - this.z) / 2000;
+                    sy += (mouseY - height / 2) * 0.05 * (2000 - this.z) / 2000;
+                }
+
+                if (sx < 0 || sx > width || sy < 0 || sy > height) return;
+
+                ctx.beginPath();
+                ctx.arc(sx, sy, radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+
+                if (warpSpeed > 20) {
+                    let prevSx = this.x / (this.z + speed * 2) * 500 + width / 2;
+                    let prevSy = this.y / (this.z + speed * 2) * 500 + height / 2;
+
+                    ctx.moveTo(prevSx, prevSy);
+                    ctx.lineTo(sx, sy);
+                    ctx.strokeStyle = `rgba(255,255,255, ${0.5 - this.z/4000})`;
+                    ctx.lineWidth = radius;
+                    ctx.stroke();
+                } else {
+                    ctx.fill();
+                }
+            }
+        }
+
+        for (let i = 0; i < 800; i++) stars.push(new Star());
+
+        let speed = 2;
+        let mouseX = width / 2;
+        let mouseY = height / 2;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            if (!introActive) {
+                const hud = document.getElementById('hud-card');
+                const ax = (window.innerWidth / 2 - e.pageX) / 40;
+                const ay = (window.innerHeight / 2 - e.pageY) / 40;
+                hud.style.transform = `rotateY(${ax}deg) rotateX(${ay}deg)`;
+            }
+        });
+
+        function animate() {
+            ctx.fillStyle = `rgba(3, 3, 5, ${warpSpeed > 0 ? 0.3 : 0.8})`;
+            ctx.fillRect(0, 0, width, height);
+
+            let currentSpeed = introActive ? (warpSpeed > 0 ? 80 : 5) : 1;
+
+            stars.forEach(star => {
+                star.update(currentSpeed);
+                star.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // --- PENGURUS SEKUEN INTRO ---
+        function startIntro() {
+            const msgs = [document.getElementById('msg1'), document.getElementById('msg2'), document.getElementById('msg3')];
+
+            setTimeout(() => msgs[0].classList.add('active'), 500);
+            setTimeout(() => msgs[0].classList.remove('active'), 2500);
+
+            setTimeout(() => {
+                warpSpeed = 1;
+                msgs[1].classList.add('active');
+            }, 3000);
+
+            setTimeout(() => {
+                msgs[1].classList.remove('active');
+                warpSpeed = 0;
+                document.getElementById('intro-layer').style.background = 'transparent';
+            }, 6000);
+
+            setTimeout(() => {
+                msgs[2].classList.add('active');
+            }, 6500);
+
+            setTimeout(() => {
+                endIntro();
+            }, 8500);
+        }
+
+        function endIntro() {
+            introActive = false;
+            document.getElementById('intro-layer').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('intro-layer').style.display = 'none';
+            }, 1000);
+        }
+
+        window.onload = startIntro;
+
+        // --- FUNGSI UI ---
+        function toggleSidebar() {
+            document.querySelector('.menu-trigger').classList.toggle('active');
+            document.getElementById('sidebar-overlay').classList.toggle('open');
         }
 
         function navigasi(url) {
-            document.querySelector('.welcome-card').style.opacity = '0';
-            document.querySelector('.welcome-card').style.transform = 'translateY(-10px)';
-            document.querySelector('.welcome-card').style.transition = '0.5s ease-in';
+            introActive = true;
+            warpSpeed = 1;
+            document.getElementById('hud-card').style.transform = 'scale(0) rotate(180deg)';
+            document.getElementById('hud-card').style.opacity = '0';
+
             setTimeout(() => {
                 window.location.href = url;
-            }, 400);
+            }, 1000);
         }
     </script>
 
@@ -356,23 +751,21 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // 🔐 AUTH GUARD (INI YANG PENTING)
         onAuthStateChanged(auth, (user) => {
             if (!user) {
-                // ❌ Tak login → balik login page
                 window.location.replace("https://smkmiivault.github.io/3SAMS-Logmasuk/");
             }
-            // ✅ Kalau ada user → biar page jalan
         });
 
-        // 🔌 LOGOUT FUNCTION (REAL LOGOUT)
         window.logout = function() {
-            signOut(auth).then(() => {
-                window.location.replace("https://smkmiivault.github.io/3SAMS-Logmasuk/");
-            });
+            navigasi("javascript:void(0)");
+            setTimeout(() => {
+                signOut(auth).then(() => {
+                    window.location.replace("https://smkmiivault.github.io/3SAMS-Logmasuk/");
+                });
+            }, 1000);
         };
     </script>
-
 
 </body>
 
